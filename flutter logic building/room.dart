@@ -1,3 +1,5 @@
+import 'dart:math';
+
 class Meeting {
   final int start;
   final int end;
@@ -19,6 +21,32 @@ bool canAttendAllMeetings(List<Meeting> meetings) {
   return true;
 }
 
+int countRoom(List<Meeting> meetings) {
+  final start = meetings.map((item) => item.start).toList();
+  final end = meetings.map((item) => item.end).toList();
+
+  start.sort();
+  end.sort();
+
+  int startPoint = 0;
+  int endPoint = 0;
+
+  int room = 0;
+  int maxRoom = 0;
+
+  while (startPoint < start.length) {
+    if (start[startPoint] < end[endPoint]) {
+      room++;
+      startPoint++;
+    } else {
+      room--;
+      endPoint++;
+    }
+    maxRoom = max(room, maxRoom);
+  }
+  return maxRoom;
+}
+
 void main() {
   print(
     canAttendAllMeetings([Meeting(0, 30), Meeting(35, 50)]),
@@ -26,4 +54,6 @@ void main() {
   print(
     canAttendAllMeetings([Meeting(0, 30), Meeting(20, 50)]),
   ); // false — 20 is inside [0,30]
+
+  print(countRoom([Meeting(0, 30), Meeting(5, 10), Meeting(15, 20)])); // 2
 }
