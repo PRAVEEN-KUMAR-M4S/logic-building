@@ -4,6 +4,9 @@ class Meeting {
   final int start;
   final int end;
   Meeting(this.start, this.end);
+
+  @override
+  toString() => "Meetint($start,$end)";
 }
 
 bool canAttendAllMeetings(List<Meeting> meetings) {
@@ -19,6 +22,32 @@ bool canAttendAllMeetings(List<Meeting> meetings) {
     }
   }
   return true;
+}
+
+List<Meeting> mergeIntervals(List<Meeting> meetings) {
+  meetings.sort((a, b) => a.start.compareTo(b.start));
+
+  List<Meeting> result = [];
+
+  for (final current in meetings) {
+    if (result.isEmpty) {
+      result.add(current);
+      continue;
+    }
+
+    final last = result.last;
+
+    if (current.start <= last.end) {
+      result[result.length - 1] = Meeting(
+        last.start,
+        max(last.end, current.end),
+      );
+    } else {
+      result.add(current);
+    }
+  }
+
+  return result;
 }
 
 int countRoom(List<Meeting> meetings) {
@@ -56,4 +85,6 @@ void main() {
   ); // false — 20 is inside [0,30]
 
   print(countRoom([Meeting(0, 30), Meeting(5, 10), Meeting(15, 20)])); // 2
+
+  print(mergeIntervals([Meeting(0, 5), Meeting(3, 10), Meeting(15, 20)]));
 }
